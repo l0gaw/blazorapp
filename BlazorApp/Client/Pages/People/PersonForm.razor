@@ -1,0 +1,34 @@
+﻿<EditForm Model="Person" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Name</label>
+        <div>
+            <InputText class="form-control" @bind-Value="Person.Name" />
+            <ValidationMessage For="@(()=> Person.Name)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Date of Birth</label>
+        <div>
+            <InputDate class="form-control" @bind-Value="Person.DateOfBirth" />
+            <ValidationMessage For="@(()=> Person.DateOfBirth)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <InputImg Label="Picture" OnSelectedImage="OnSelectedImage" />
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+</EditForm>
+
+@code {
+    [Parameter] public Person Person { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+    private void OnSelectedImage(string imageBase64)
+    {
+        Person.Picture = imageBase64;
+    }
+}

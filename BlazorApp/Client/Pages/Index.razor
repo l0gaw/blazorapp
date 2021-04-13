@@ -1,0 +1,17 @@
+﻿@page "/"
+@page "/index"
+@inject IMovieService movieService;
+
+<div>
+    <h3>Movie</h3>
+    <MoviesList Movies="movies" />
+</div>
+
+@code{
+    private List<Movie> movies;
+    protected override async Task OnInitializedAsync()
+    {
+        movies = await movieService.GetMovies();
+    }
+
+}

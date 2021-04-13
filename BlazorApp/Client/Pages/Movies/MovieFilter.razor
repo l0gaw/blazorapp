@@ -1,0 +1,82 @@
+﻿@page "/movies/search"
+@inject IMovieService movieService
+
+<h3>Search Movies</h3>
+<div class="form-inline">
+    <div class="form-group mb-2">
+        <label for="title" class="sr-only">Title</label>
+        <input type="text" class="form-control" id="title" placeholder="Movie Title"
+               @bind-value="title" @bind-value:event="oninput"
+               @onkeypress="@((KeyboardEventArgs e)=> TitleKeyPress(e))" />
+    </div>
+    <div class="form-group mx-sm-3 mb-2">
+        <select class="form-control" @bind="selectedGenre">
+            <option value="0">
+                --Select a Genre
+            </option>
+            @foreach (var genre in genres)
+            {
+                <option value="@genre.Id">@genre.Name</option>
+            }
+        </select>
+    </div>
+    <div class="form-group mx-sm-3 mb-2">
+        <input type="checkbox" class="form-check-input" id="upcomingReleases" @bind="upComingReleases" />
+        <label class="form-check-label" for="upComingReleases">
+            Upcoming Releases
+        </label>
+    </div>
+    <div class="form-group mx-sm-3 mb-2">
+        <input type="checkbox" class="form-check-input" id="upcomingReleases" @bind="inTheaters" />
+        <label class="form-check-label" for="upComingReleases">
+            In Theaters
+        </label>
+    </div>
+    <button type="button" class="btn btn-primary mb-2 mx-sm-3" @onclick="SearchForMovies"> Filter</button>
+    <button type="button" class="btn btn-danger mb-2" @onclick="Clear">Clear</button>
+</div>
+
+<MoviesList Movies="movies" />
+
+@code {
+
+    int selectedGenre = 0;
+    string title;
+    bool upComingReleases;
+    bool inTheaters;
+    private List<Genre> genres;
+    private List<Movie> movies;
+
+    protected override async Task OnInitializedAsync()
+    {
+        genres = new List<Genre> { new Genre { Id = 1, Name = "Action" }, new Genre { Id = 2, Name = "Comedy" } };
+        movies = await movieService.GetMovies();
+    }
+
+    private async void TitleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchForMovies();
+        }
+    }
+
+    private async Task SearchForMovies()
+    {
+        movies = (await movieService.GetMovies()).Where(t => t.Title.Contains(title)).ToList();
+        Console.WriteLine(title);
+        Console.WriteLine(selectedGenre);
+        Console.WriteLine(upComingReleases);
+        Console.WriteLine(inTheaters);
+    }
+
+    private async Task Clear()
+    {
+        movies = await movieService.GetMovies();
+        selectedGenre = 0;
+        title = string.Empty;
+        upComingReleases = false;
+        inTheaters = false;
+    }
+}
+

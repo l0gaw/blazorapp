@@ -1,0 +1,11 @@
+﻿@if (string.IsNullOrEmpty(ImgUrl))
+{
+    <img src="https://static.vecteezy.com/system/resources/previews/000/376/574/original/question-mark-vector-icon.jpg" />
+}
+else {
+    <img src="@ImgUrl" />
+}
+
+@code {
+    [Parameter] public string ImgUrl { get; set; }
+}

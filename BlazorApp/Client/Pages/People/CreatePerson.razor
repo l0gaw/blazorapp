@@ -1,0 +1,14 @@
+﻿@page "/person/create"
+
+<h3>CreateMovie</h3>
+
+<PersonForm Person="person" OnValidSubmit="Save" />
+
+@code {
+    private Person person = new Person();
+
+    private void Save()
+    {
+        Console.WriteLine(person.Name);
+    }
+}
